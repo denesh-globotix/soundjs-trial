@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Player</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="http://code.createjs.com/soundjs-0.6.1.min.js"></script>
+</head>
+
+<body>
+    <div class="container" style="margin-left: 40vw; margin-top: 40vh;">
+        <h6>Hey there. Pleasure seeing you again pal.</h6>
+        <div class="row">
+            <div style="padding-left: 4vw;">
+                <input id="loadBtn" type="button" value="Play" onclick="load()" />
+            </div>
+            <div style="padding-left: 2vw;">
+                <input aria-label="Large" id="stopBtn" type="button" value="Stop" onclick="stop();"
+                    disabled="disabled" />
+            </div>
+        </div>
+        <p id="display">Click <code>Play</code>! What are you waiting for?</p>
+    </div>
+    
+    <script>
+        function load() {
+            // Update the UI
+            document.getElementById("display").innerText = "Loading...";
+            document.getElementById("loadBtn").disabled = "disabled";
+
+            let mySound = "M-GameBG.ogg"
+
+            // Load the sound
+            if (createjs.Sound.loadComplete(mySound)) {
+                document.getElementById("stopBtn").disabled = "";
+                document.getElementById("display").innerHTML = "There we go, enjoy the music! Brought to you by: " + createjs.Sound.activePlugin.toString();
+                createjs.Sound.play(mySound);
+            } else {
+                createjs.Sound.alternateExtensions = ["mp3"];
+                createjs.Sound.addEventListener("fileload", handleFileLoad);
+                createjs.Sound.registerSound({ id: "mySound", src: mySound });
+            }
+        }
+
+        function handleFileLoad(event) {
+            // Update the UI
+            document.getElementById("stopBtn").disabled = "";
+            document.getElementById("display").innerHTML = "There we go, enjoy the music! Brought to you by: " + createjs.Sound.activePlugin.toString();
+
+            // Play the loaded sound
+            createjs.Sound.play(event.src);
+        }
+
+        function stop() {
+            createjs.Sound.stop();
+            document.getElementById("loadBtn").disabled = "";
+            document.getElementById("stopBtn").disabled = "disabled";
+            document.getElementById("display").innerHTML = "Hey <code>why</code> did you stop?! I was just about to fall asleep";
+        }
+    </script>
+</body>
+
+</html>
